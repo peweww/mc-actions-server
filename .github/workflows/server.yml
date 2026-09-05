@@ -1,0 +1,43 @@
+name: Minecraft Server
+
+on:
+  workflow_dispatch:        # supaya bisa dijalankan manual dari tab Actions
+  schedule:
+    - cron: '0 */6 * * *'   # coba nyalakan ulang tiap ~6 jam (best effort)
+
+jobs:
+  server:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350     # di bawah limit 360 menit (6 jam) per job
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'   # sesuaikan: MC 1.20.5+ butuh Java 21, versi lama Java 17
+
+      - name: Ambil kembali dunia (world) dari cache
+        uses: actions/cache@v4
+        with:
+          path: world
+          key: mc-world-${{ github.run_id }}
+          restore-keys: |
+            mc-world-
+
+      - name: Unduh server & terima EULA
+        run: |
+          curl -o server.jar "https://fill-data.papermc.io/v1/objects/0de30efb024bc8b83c9c7d507d11802897ad8056b6110ec09fe1a91d126ccb54/paper-26.2-121.jar"
+          echo "eula=true" > eula.txt
+
+      - name: Jalankan playit.gg agent
+        run: |
+          curl -L -o playit https://github.com/playit-cloud/playit-agent/releases/latest/download/playit-linux-amd64
+          chmod +x playit
+          ./playit --secret "${{ secrets.PLAYIT_SECRET }}" &
+
+      - name: Jalankan server Minecraft
+        run: java -Xmx4G -Xms2G -jar server.jar nogui
