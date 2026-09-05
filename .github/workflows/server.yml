@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '21'   # sesuaikan: MC 1.20.5+ butuh Java 21, versi lama Java 17
+          java-version: '25'   # sesuaikan: MC 1.20.5+ butuh Java 21, versi lama Java 17
 
       - name: Ambil kembali dunia (world) dari cache
         uses: actions/cache@v4
