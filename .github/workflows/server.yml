@@ -30,7 +30,7 @@ jobs:
 
       - name: Unduh server & terima EULA
         run: |
-          curl -o server.jar "https://fill-data.papermc.io/v1/objects/0de30efb024bc8b83c9c7d507d11802897ad8056b6110ec09fe1a91d126ccb54/paper-26.2-121.jar"
+          curl -o server.jar "0de30efb024bc8b83c9c7d507d11802897ad8056b6110ec09fe1a91d126ccb54"
           echo "eula=true" > eula.txt
 
       - name: Jalankan playit.gg agent
